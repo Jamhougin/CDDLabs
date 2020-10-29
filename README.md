@@ -15,5 +15,7 @@ Dependencies:
 3.g++for compiling
 
 4.gdbfor debugging
+
 5.Makefor managing code projects
+
 6.Doxygenfor documenting code
