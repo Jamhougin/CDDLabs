@@ -1,0 +1,22 @@
+This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/.
+
+Author:James Hall
+       c00007006
+       
+
+3. How to install project
+Do "make -k" from terminal in the same directory as main.cpp
+
+Dependencies:
+GCC complier
+Make
+
+File list:
+main.cpp
+Semaphore.cpp
+Semaphore.h
+signal.cpp
+Makefile 
+
+
+
