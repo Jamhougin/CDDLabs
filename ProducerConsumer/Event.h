@@ -1,15 +1,15 @@
-/* Barrier.h --- Barrier.h
+/* Event.h --- 
  * 
- * Filename: Barrier.h
+ * Filename: Event.h
  * Description: 
  * Author: Joseph
  * Maintainer: 
- * Created: Tue Jan  8 12:12:03 2019 (+0000)
+ * Created: Tue Jan  8 12:30:05 2019 (+0000)
  * Version: 
  * Package-Requires: ()
- * Last-Updated: Tue Jan  8 12:15:54 2019 (+0000)
+ * Last-Updated: Tue Jan  8 12:30:14 2019 (+0000)
  *           By: Joseph
- *     Update #: 2
+ *     Update #: 1
  * URL: 
  * Doc URL: 
  * Keywords: 
@@ -43,23 +43,7 @@
  */
 
 /* Code: */
-#pragma once
-#include "Semaphore.h"
-
-class Barrier{
-  int threadCount = 0;
-  int threadTotal;
-
-  Semaphore turnstileOne{0};
-  Semaphore turnstileTwo{1};
-  Semaphore theLock{1};
- public:
-  Barrier(int numThreads):threadTotal(numThreads){};
-  virtual ~Barrier();
-  void wait();
-  void phaseOne();
-  void phaseTwo();  
-};
 
 
-/* Barrier.h ends here */
+
+/* Event.h ends here */

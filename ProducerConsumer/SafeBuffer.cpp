@@ -1,15 +1,11 @@
-// Barrier.cpp --- 
+// SafeBuffer.cpp --- 
 // 
-// Filename: Barrier.cpp
+// Filename: SafeBuffer.cpp
 // Description: 
-// Author: Joseph
-// Maintainer: James Hall
-// Created: Tue Jan  8 12:14:02 2019 (+0000)
+// Author: James Hall
+// Created: Tue Nov 26 2020 
 // Version: 
 // Package-Requires: ()
-// Last-Updated: Tue Jan  8 12:15:21 2019 (+0000)
-//           By: Joseph
-//     Update #: 2
 // URL: 
 // Doc URL: 
 // Keywords: 
@@ -44,49 +40,39 @@
 // 
 
 // Code:
-#include "Semaphore.h"
-#include "Barrier.h"
+#include "SafeBuffer.h"
 #include <iostream>
 
 
-Barrier::~Barrier()
-{
+int Buffer::size(){
+    return count;
 }
-void Barrier::phaseOne()
-{
-  theLock.Wait(); 
-  ++threadCount;
-  if (threadCount == threadTotal)
-  {
-    std::cout << std::endl;
-    turnstileTwo.Wait();
-    turnstileOne.Signal();  
-  }
-  theLock.Signal();
-  turnstileOne.Wait();
-  turnstileOne.Signal(); 
+bool Buffer::isEmpty(){
+    return (size() == 0);
 }
-
-void Barrier::phaseTwo()
-{
-  theLock.Wait();
-  --threadCount;
-  if (threadCount == 0)
-  {
-    std::cout << std::endl;
-    turnstileOne.Wait();
-    turnstileTwo.Signal();
-  }
-
-  theLock.Signal();
-  turnstileTwo.Wait();
-  turnstileTwo.Signal(); 
+bool Buffer::isFull(){
+    return (size() == capacity);
 }
-
-void Barrier::wait()//Pointless
-{
-  phaseOne();
-  phaseTwo();
+void Buffer::enqueue(int value){
+    if (isFull()){
+        exit(0);
+    }
+    back = (back+1)%capacity;
+    arr[back] = value;
+    count++;
+}
+void Buffer::dequeue(){
+    if(isEmpty()){
+        exit(0);
+    }
+    front = (front+1)%capacity;
+    count--;
+}
+int Buffer::viewBack(){
+    return arr[back];
+}
+int Buffer::viewFront(){
+    return arr[front];
 }
 // 
-// Barrier.cpp ends here
+// SafeBuffer.cpp ends here
