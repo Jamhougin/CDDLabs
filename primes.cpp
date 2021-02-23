@@ -1,0 +1,110 @@
+/*!
+  \mainpage Find Prime Number and Twin Prime Numbers
+  \author James Hall c00007006
+  \date 15th February 2021
+  \copyright License: GNU Affero General Public License v3.0
+  \section Description
+  \subsection A c++ program to find the prime numbers between 1 and a given number and also return the twin prime in the same range.
+*/ 
+#include <stdio.h>
+#include <iostream>
+#include <omp.h>
+
+/*!
+  \fn void isPrime(int n)
+  \param n = The Number passed tot the function to be checked if prime
+  \brief Method to check is number is prime
+ */
+bool isPrime(int n) 
+{
+    int N=n;
+    // Corner cases 
+    if (N <= 1)  return false; 
+    if (N <= 3)  return true; 
+   
+    // This is checked so that we can skip  
+    // middle five numbers in below loop 
+    if (N%2 == 0 || N%3 == 0) return false; 
+
+    for (int i=5; i*i<=N; i=i+6){
+        if (N%i == 0 || N%(i+2) == 0) 
+           return false; 
+    }
+    return true; 
+} 
+  
+/*!
+  \fn void primeInRange(int L, int R) 
+  \param L = Lower bound of range to be checked
+  \param R = Upper bound of range to be checked
+  \brief Method to return number of primes in given range.
+ */
+void primeInRange(int L, int R, int T) 
+{ 
+    int i;
+    int count = 0;
+  
+    // Traverse each number in the 
+    // interval with the help of for loop
+    ///"parallel" Defines a parallel region.
+    ///"for" causes the work done in a for loop inside a parallel region to be divided among threads
+    #pragma omp parallel for num_threads(T)
+    for (i = L; i <= R; i++) {
+      if(isPrime(i)){
+	//Ensure count is counted correctly with atomic
+	///"atomic" Specifies memory location is updated atomically
+        #pragma omp atomic
+	count++;
+      }
+    }
+    printf("Total number of primes: %d \n", count);
+} 
+
+/*!
+  \fn void twinPrimeInRange(int L, int R) 
+  \param L = Lower bound of range to be checked
+  \param R = Upper bound of range to be checked
+  \brief Method to return number of twin primes in given range and print them to screen.
+ */
+void twinPrimeInRange(int L, int R, int T) 
+{ 
+    int i;
+    int count = 0;
+  
+    // Traverse each number in the 
+    // interval with the help of for loop
+    ///"parallel" Defines a parallel region.
+    ///"for" causes the work done in a for loop inside a parallel region to be divided among threads
+    #pragma omp parallel for num_threads(T)
+    for (i = L; i <= R; i++) { 
+      if (isPrime(i) && isPrime(i+2)){
+	//Ensure count is counted correctly with atomic.
+	///"atomic" Specifies memory location is updated atomically
+        #pragma omp atomic
+	count++;
+	printf("%d %d \n", i, i+2);
+      }
+    }
+    printf("There are %d twin primes between %d and %d. \n", count, L, R);
+} 
+
+/*!
+  \fn int main(int argc, char *argv[]) 
+  \param int argc = Numbe rof command line arguments
+  \param char *argv[] = Array of arguments supplied by command line
+  \brief Main method.
+ */
+int main(int argc, char *argv[]) 
+{ 
+    // 1 to Given value 
+    int L = 1;
+    char *passedValue = argv[1];
+    char *threadCount = argv[2];
+    int R = atoi(passedValue);
+    int threads = atoi(threadCount);
+  
+    // Function Call 
+    twinPrimeInRange(L,R,threads);
+    primeInRange(L,R,threads);
+    return 0; 
+}
